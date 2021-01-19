@@ -1,0 +1,12 @@
+com\booksinfoservice\BooksInfoServiceApplication.class
+com\booksinfoservice\controller\BooksInfoController.class
+com\booksinfoservice\entity\BooksOrderData.class
+com\booksinfoservice\service\BooksInfoService.class
+com\booksinfoservice\exception\BooksOrderNotFoundException.class
+com\booksinfoservice\model\BooksItem.class
+com\booksinfoservice\exception\CustomizedExceptionHandling.class
+com\booksinfoservice\repository\BooksInfoServiceRepository.class
+com\booksinfoservice\SwaggerFoxConfiguration.class
+com\booksinfoservice\model\BooksReq.class
+com\booksinfoservice\service\BooksItemFeignClientProxy.class
+com\booksinfoservice\exception\ExceptionResponse.class
