@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.booksinfoservice.entity.BooksOrderData;
 import com.booksinfoservice.model.BooksReq;
 import com.booksinfoservice.service.BooksInfoService;
+import com.google.common.collect.Lists;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 /**
  * 
@@ -39,8 +41,9 @@ public class BooksInfoController {
 	/**
 	 * It will return the all books Data
 	 * 
-	 * @return OrderData
+	 * @return BooksOrderData
 	 */
+	@HystrixCommand(fallbackMethod = "getFallBackBooksOrderDataAll")
 	@GetMapping("")
 	public ResponseEntity<List<BooksOrderData>> getAllBooks() {
 		LOGGER.info("Enter into  OrderInfoController : getAllBooks method {} ");
@@ -48,6 +51,10 @@ public class BooksInfoController {
 		booksDataList = booksInfoService.getAllOrderedBooks();
 		return new ResponseEntity<>(booksDataList, HttpStatus.OK);
 	}
+	
+	 public List<BooksOrderData> getFallBackBooksOrderDataAll() {
+		 return Lists.newArrayList();
+	 }
 
 	/**
 	 * Save the BooksData into Database with given books request
@@ -62,17 +69,26 @@ public class BooksInfoController {
 		BooksOrderData placeBook = booksInfoService.createOrderedBooks(booksReq);
 		return new ResponseEntity<>(placeBook, HttpStatus.OK);
 	}
-
+	 
 	/**
 	 * getting the book details by orderId
 	 * 
 	 * @param id
 	 * @return BooksData
 	 */
+	@HystrixCommand(fallbackMethod = "getFallBackBooksOrderData")
 	@GetMapping("/{bookorderId}")
 	public ResponseEntity<BooksOrderData> getBookItemById(@PathVariable("id") long id) {
 		LOGGER.info("Enter into  BooksInfoController : getBookItemById method {} ");
 		BooksOrderData bookData = booksInfoService.getOrderedBookById(id);
 		return new ResponseEntity<>(bookData, HttpStatus.OK);
 	}
+	
+	  public BooksOrderData getFallBackBooksOrderData(long bookorderId) {
+		  BooksOrderData data = new BooksOrderData();
+		  data.setBookorderId(-1);
+		  data.setCustomerName("FallBack Method gets called");
+		  data.setShippingAddress("N/A");
+		  return data;
+	  }
 }
